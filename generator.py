@@ -1,21 +1,24 @@
 import random
 
-def create_basket(board, r, c):
+''' 
+This function generates a list of numbers that are valid for 
+given position (row and column) of the puzzle board
+'''
+def create_basket(board, row, col):
     basket = []
     basket.extend(range(1,10))
-    for i in range(0+(r//3)*3, 3+(r//3)*3):
-        for j in range(0+(c//3)*3, 3+(c//3)*3):
+    for i in range(0+(row//3)*3, 3+(row//3)*3):
+        for j in range(0+(col//3)*3, 3+(col//3)*3):
             num = board[i][j]
             if num in basket:
                 basket.remove(num)
     
     for i in range(9):
-        num = board[i][c]
+        num = board[i][col]
         if num in basket:
             basket.remove(num)
     
-    for i in range(9):
-        num = board[r][i]
+    for num in board[row]:
         if num in basket:
             basket.remove(num)
     
@@ -25,44 +28,51 @@ def create_basket(board, r, c):
 def zero_row(x):
     return x * 0
 
-
+'''
+The generator will fill the entire field with a random unique solution and then deletes 
+single fields at random in one pass. The "empty_chance" value between 1 and 100 is the 
+percent chance of a field getting set to zero. (The higher the number the harder the puzzle, 
+more missing fields)
+'''
 def generate_board(empty_chance):
     # initiate a blank board
     board = []
     while len(board) < 9:
         board.append([0]*9)  
 
+    # filling the board with a unique solution 
     counter = 0
-    r = 0
-    while r < len(board):
-        c = 0
-        while c < len(board[r]):
-            basket = create_basket(board, r, c)
+    row = 0
+    while row < len(board):
+        col = 0
+        while col < len(board[row]):
+            basket = create_basket(board, row, col)
             if len(basket) > 0:
                 random.shuffle(basket)
-                board[r][c] = basket.pop(0)
-                c += 1
+                board[row][col] = basket.pop(0)
+                col += 1
             else:
                 counter += 1
                 if counter < 5:
-                    board[r] = list(map(zero_row, board[r]))
-                    c = 0
+                    board[row] = list(map(zero_row, board[row]))
+                    col = 0
                 else:
                     counter = 0
-                    board[r] = list(map(zero_row, board[r]))
-                    board[r-1] = list(map(zero_row, board[r-1]))
-                    if r-2 <= 0:
-                        r = 0
+                    board[row] = list(map(zero_row, board[row]))
+                    board[row-1] = list(map(zero_row, board[row-1]))
+                    if row-2 <= 0:
+                        row = 0
                     else:
-                        r -= 2
+                        row -= 2
                     break
-        r += 1
+        row += 1
 
-    for r in range(len(board)):
-        for c in range(len(board[r])):
+    # deleting numbers from the board to generate the puzzle
+    for row in range(len(board)):
+        for col in range(len(board[row])):
             chance = random.randint(1,100)
             if chance <= empty_chance:
-                board[r][c] = 0
+                board[row][col] = 0
             
 
     return board
