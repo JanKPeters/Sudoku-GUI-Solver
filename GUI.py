@@ -262,10 +262,16 @@ def main():
     key = None
     run = True
     start = time.time()
+    last_update = 0
     strikes = 0
     while run:
 
-        play_time = round(time.time() - start)
+        if board.is_finished():
+            while last_update < 1:
+                play_time = round(time.time() - start)
+                last_update += 1
+        else:
+            play_time = round(time.time() - start)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
