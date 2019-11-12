@@ -5,9 +5,10 @@ Run GUI.py to play sudoku.
 
 # Instructions
 Click a box and hit the number on your keybaord to pencil in a number. To confirm that value press the ENTER key on that box. To delete a pencil in you can click DEL. Finally to solve the board press SPACE, sit back and watch the algorithm run.
+Press n to generate a new puzzle.
 
 # Puzzle generator
-In addition to the original solver "See video tutorial of TechwithTim" the gui now generates a random sudoku at start up.
+In addition to the original solver "See video tutorial from TechwithTim" the gui now generates a random sudoku at start up.
 When the Gui is loaded just press n key on the keyboard to generate a new sudoku puzzle and reset the game.
 
 ! This generator is still a simple algorithm and does generate solvable puzzles but not necessarily unique puzzles. It does not check for unique rectangles "yet" ! Still fun though.
