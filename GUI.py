@@ -6,7 +6,7 @@ pygame.font.init()
 
 
 class Grid:
-    board = generator.generate_board(55)
+    # board = generator.generate_board(55)
     # board = [
     #     [7, 8, 0, 4, 0, 0, 1, 2, 0],
     #     [6, 0, 0, 0, 7, 5, 0, 0, 9],
@@ -19,17 +19,17 @@ class Grid:
     #     [0, 4, 9, 2, 0, 6, 0, 0, 7]
     # ]
 
-    def __init__(self, rows, cols, width, height, win):
+    def __init__(self, rows, cols, width, height, win, puzzle):
         self.rows = rows
         self.cols = cols
-        self.cubes = [[Cube(self.board[i][j], i, j, width, height) for j in range(cols)] for i in range(rows)]
+        self.cubes = [[Cube(puzzle[i][j], i, j, width, height) for j in range(cols)] for i in range(rows)]
         self.width = width
         self.height = height
         self.model = None
         self.update_model()
         self.selected = None
         self.win = win
-
+    
     def update_model(self):
         self.model = [[self.cubes[i][j].value for j in range(self.cols)] for i in range(self.rows)]
 
@@ -255,10 +255,15 @@ def format_time(secs):
     return mat
 
 
+def gen_puzzle():
+    return generator.generate_puzzle(55)
+
+
 def main():
     win = pygame.display.set_mode((540,600))
     pygame.display.set_caption("Sudoku")
-    board = Grid(9, 9, 540, 540, win)
+    puzzle = gen_puzzle()
+    board = Grid(9, 9, 540, 540, win, puzzle)
     key = None
     run = True
     start = time.time()
@@ -301,6 +306,17 @@ def main():
 
                 if event.key == pygame.K_SPACE:
                     board.solve_gui()
+                    
+                if event.key == pygame.K_n:
+                    puzzle = gen_puzzle()
+                    board = Grid(9, 9, 540, 540, win, puzzle)
+                    key = None
+                    run = True
+                    start = time.time()
+                    last_update = 0
+                    strikes = 0
+                    redraw_window(win, board, play_time, strikes)
+                    pygame.display.update()
 
                 if event.key == pygame.K_RETURN:
                     i, j = board.selected
